@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour
     public int lives;
     private float speed;
 
-    private GameManager gameManager;
+    public GameManager gameManager;
+    public GameManager AddScore;
 
     private float horizontalInput;
     private float verticalInput;
@@ -120,6 +121,11 @@ private void OnTriggerEnter2D(Collider2D whatDidIHit)
                     StartCoroutine(ShieldPowerDown());
                     break;
             }
+        }
+        if (whatDidIHit.tag == "Coin")
+        {
+            Destroy(whatDidIHit.gameObject);
+            gameManager.AddScore(1);
         }
     }
 

@@ -15,12 +15,14 @@ public class GameManager : MonoBehaviour
     public GameObject powerupPrefab;
     public GameObject gameOverMenu;
     public GameObject audioPlayer;
+    public GameObject coinPrefab;
 
     public AudioClip powerUpSound;
     public AudioClip powerDownSound;
 
     public TextMeshProUGUI powerupText;
     public TextMeshProUGUI livesText;
+    public TextMeshProUGUI scoreText;
 
     public float horizontalScreenSize;
     public float verticalScreenSize;
@@ -43,6 +45,9 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(SpawnPowerup());
         powerupText.text = "No power ups Yet!";
+
+        StartCoroutine(SpawnCoins());
+        scoreText.text = "Score: " + score.ToString();
     }
 
     // Update is called once per frame
@@ -52,6 +57,8 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+
+        scoreText.text = "Score: " + score.ToString();
     }
 
     void CreateEnemyOne()
@@ -82,6 +89,17 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(spawnTime);
         CreatePowerup();
         StartCoroutine(SpawnPowerup());
+    }
+    void CreateCoins()
+    {
+        Instantiate(coinPrefab, new Vector3(Random.Range(-horizontalScreenSize * .8f, horizontalScreenSize * .8f), Random.Range(-verticalScreenSize * .8f, verticalScreenSize * .8f), 0), Quaternion.identity);
+    }
+    IEnumerator SpawnCoins()
+    {
+        float spawnTime = Random.Range(3, 5);
+        yield return new WaitForSeconds(spawnTime);
+        CreateCoins();
+        StartCoroutine(SpawnCoins());
     }
 public void ManagePowerupText(int powerupType)
     {
@@ -118,7 +136,7 @@ public void PlaySound(int whichSound)
             break;
         }
     }
-
+//ontriggerenter2d AddScore(1)
     public void AddScore(int earnedScore)
     {
         score = score + earnedScore;
